@@ -1,0 +1,16 @@
+# ignore file of the following formats
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.csv
+*.xlsx
+*.zip
+# keep specific folders
+inputs/**
+!inputs/*/
+!inputs/*/.gitkeep
+outputs/*
+!outputs/.gitkeep
+scrap/*
+
