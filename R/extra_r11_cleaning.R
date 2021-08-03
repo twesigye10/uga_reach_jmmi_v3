@@ -2,7 +2,7 @@
 
 month_specific_cleaning<-function(input_df){
 
-  df %>% 
+  input_df %>% 
     mutate(vendors_change= case_when(yrmo == 202011 & vendors_change=="Less" ~ NA_character_,
                                      TRUE ~ vendors_change),
            weight_firewood= case_when(yrmo == 202011 & 
