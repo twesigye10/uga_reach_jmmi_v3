@@ -18,7 +18,8 @@ settlement_district <- function(input_setlement, input_districts) {
     summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE))) %>% 
     mutate(settlement = "adjumani")
   
-  settlement_data <- bind_rows(settlement_data, adjumani_coordinates)  
+  settlement_data <- bind_rows(settlement_data, adjumani_coordinates) %>% 
+    janitor::clean_names()
   
   settlement_district_data <- list(settlements = settlement_data, districts = district_data)
 }
