@@ -15,6 +15,9 @@ library(butteR)
 
 # source scripts
 source("./R/location_list.R")
+source("./R/functions.R")
+source("./R/extra_r11_cleaning.R")
+source("./R/pct_change_function.R")
 
 # location data -----------------------------------------------------------
 
