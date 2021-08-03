@@ -13,4 +13,16 @@ library(hypegrammaR)
 library(lubridate)
 library(butteR)
 
+# source scripts
+source("./R/location_list.R")
 
+# location data -----------------------------------------------------------
+
+# Load locations data
+settlement_data <- read_csv("inputs/settlement_list.csv", na = c(""," ", "NA"))
+district_data <- read_csv("inputs/Districts_list.csv", na = c(""," ","NA"))
+
+location_data <- settlement_district(settlement_data, district_data)
+
+settlement_data <- location_data$settlements
+district_data <- location_data$districts
