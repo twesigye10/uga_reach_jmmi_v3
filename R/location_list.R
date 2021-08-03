@@ -24,6 +24,7 @@ settlement_district <- function(input_setlement, input_districts) {
   settlement_district_data <- list(settlements = settlement_data, districts = district_data)
 }
 
+# regroup regions
 regroup_regions<-function(input_df){
   south_west<-c("kyaka", "kyangwali", "nakivale", "oruchinga", "rwamwanja")
   west_nile<- c("adjumani", "rhino camp", "bidibidi", "imvepi", "kiryandongo", 
@@ -31,10 +32,9 @@ regroup_regions<-function(input_df){
   input_df %>% 
     mutate(
            regions = case_when(
-             yrmo > 202012 & settlement %in% south_west~"south west",
-             yrmo > 202012 & settlement %in% west_nile~"west nile",
+             yrmo > 202012 & settlement %in% south_west ~ "south west",
+             yrmo > 202012 & settlement %in% west_nile ~ "west nile",
              TRUE ~ regions
            )
-           
     )
 }
