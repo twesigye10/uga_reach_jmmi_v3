@@ -85,7 +85,7 @@ df<-df_all_data %>%
            district == "Bunyoro" ~ "west nile",
            TRUE ~ "south west"
          )
-         ) %>% 
+  ) %>% 
   # correction from Dec 2020
   regroup_regions() %>%
   mutate(month_lab = lubridate::month(mo, label = TRUE, abbr = FALSE),
@@ -93,14 +93,45 @@ df<-df_all_data %>%
          market_final = ifelse(market == "Other", market_other, market),
          market = NULL,
          market_other = NULL
-         ) %>% 
+  ) %>% 
   filter(!is.na(month_lab)) %>% 
   # reorganise columns and remove other columns
   select(-c("day", "DName2019", "sub_regions"),
          c("month","country", "district", "regions", "settlement", "market_final"), 
          everything()
-         )
+  )
 # WFP/REACH decided to remove 'Less' from vendors_change data as it should not have been an option 
 if("202011" %in% yrmo_to_include){
   df<- month_specific_cleaning(df)
 }
+
+
+# means and percentage change calculations -------------------------------------------------------
+
+item_prices <- df %>% 
+  select(uuid, yrmo, month, regions, district, settlement, market_final,
+         contains("price"), starts_with("weight_"), -starts_with("price_increase"),
+         -starts_with("price_decrease"), -ends_with(".prices"), -starts_with("challenge.")
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    price_dodo = price_dodo/weight_dodo,
+    price_cassava = price_cassava/weight_cassava,
+    price_fish = price_fish/weight_fish,
+    price_firewood = price_firewood/weight_firewood,
+    price_charcoal = price_charcoal/weight_charcoal
+  )
+
+# could not identify its usage
+# item_prices[item_prices == 99] <- NA
+# item_prices[item_prices == "yes"] <- 1
+
+# for pct change we only want this month, last month, and reference month
+item_prices_for_pct_change <- item_prices %>% 
+  filter(yrmo %in% c(yrmo_to_include[1], yrmo_to_include[length(yrmo_to_include)], yrmo_to_include[length(yrmo_to_include) - 1])) %>% 
+  mutate(collection_order = case_when( yrmo == yrmo_to_include[length(yrmo_to_include)] ~ 4,
+                                       yrmo == yrmo_to_include[length(yrmo_to_include) - 1] ~ 3,
+                                       TRUE ~ 1  ),
+         month = month(month, label = TRUE, abbr = FALSE)
+  )
+
