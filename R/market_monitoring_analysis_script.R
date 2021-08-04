@@ -157,3 +157,26 @@ district_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
 region_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
                                               c("uuid", "district", "settlement", "market_final"),
                                               c(regions, yrmo))
+
+# counts per area: region and settlements
+markets_per_region <- item_prices_for_pct_change %>% 
+  select(regions, yrmo, market_final) %>% 
+  group_by(regions, yrmo) %>% 
+  summarise(num_market_assessed = n_distinct(market_final),
+            num_assessed = length(yrmo), .groups = "drop_last") %>% 
+  rename(level = regions) %>% 
+  filter(yrmo == yrmo_constructed) %>% 
+  select(level, num_market_assessed, num_assessed)
+
+# counts per area: nation wide
+markets_nationwide <- item_prices_for_pct_change %>% 
+  select(regions, yrmo, market_final) %>% 
+  group_by(yrmo) %>% 
+  summarise(num_market_assessed = n_distinct(market_final),
+            num_assessed = length(yrmo), .groups = "drop_last") %>% 
+  mutate(level = "national") %>%
+  filter(yrmo == yrmo_constructed) %>% 
+  select(level, num_market_assessed, num_assessed)
+
+data_merge_summary <- bind_rows(markets_nationwide, markets_per_region)
+
