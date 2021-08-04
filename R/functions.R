@@ -6,3 +6,10 @@ get_files_metadata<-function(folder_path){
   fps$num_files<- length(fps$file_name)
   fps
 }
+
+# replace Inf and NaN with NAs for a cleaner output
+change_nan_and_inf_to_na <- function(x) {
+  y <- replace(x, is.infinite(x), NA) 
+  z <- replace(y, is.nan(y), NA)
+  z
+} 
