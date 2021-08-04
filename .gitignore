@@ -14,3 +14,4 @@ outputs/*
 !outputs/.gitkeep
 scrap/*
 
+support_docs/*
