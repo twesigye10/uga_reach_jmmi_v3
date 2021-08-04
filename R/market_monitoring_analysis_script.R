@@ -81,7 +81,7 @@ df<-df_all_data %>%
          sub_regions = str_to_sentence(sub_regions),
          # regions grouping(initial implementation), This is changes in regrouping since Dec 2020
          regions = case_when(
-           sub_regions == "Acholi" | df$sub_regions == "West nile" ~ "west nile",
+           sub_regions == "Acholi" | sub_regions == "West nile" ~ "west nile",
            district == "Bunyoro" ~ "west nile",
            TRUE ~ "south west"
          )
@@ -120,7 +120,9 @@ item_prices <- df %>%
     price_fish = price_fish/weight_fish,
     price_firewood = price_firewood/weight_firewood,
     price_charcoal = price_charcoal/weight_charcoal
-  )
+  ) %>% 
+  select(-contains("weight_"), - contains("Observed")) %>% 
+  mutate(across(starts_with("price_"), ~ as.double(.)))
 
 # could not identify its usage
 # item_prices[item_prices == 99] <- NA
@@ -134,4 +136,34 @@ item_prices_for_pct_change <- item_prices %>%
                                        TRUE ~ 1  ),
          month = month(month, label = TRUE, abbr = FALSE)
   )
+
+national_items <- item_prices_for_pct_change %>% 
+  select(-c("uuid", "regions", "district", "settlement", "market_final")) %>% 
+  group_by(yrmo, collection_order) %>% 
+  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
+  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+
+markets_items <- item_prices_for_pct_change %>% 
+  select(-c("uuid", "regions", "district")) %>% 
+  group_by(settlement, market_final, yrmo) %>% 
+  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
+  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+
+settlement_items <- item_prices_for_pct_change %>% 
+  select(-c("uuid", "market_final")) %>% 
+  group_by(regions, district, settlement, yrmo) %>% 
+  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
+  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+
+district_items <- item_prices_for_pct_change %>% 
+  select(-c("uuid", "settlement", "market_final")) %>% 
+  group_by(regions, district, yrmo) %>% 
+  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
+  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+
+region_items <- item_prices_for_pct_change %>% 
+  select(-c("uuid", "district", "settlement", "market_final")) %>% 
+  group_by(regions, yrmo) %>% 
+  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
+  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
 
