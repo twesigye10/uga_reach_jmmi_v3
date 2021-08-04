@@ -137,33 +137,23 @@ item_prices_for_pct_change <- item_prices %>%
          month = month(month, label = TRUE, abbr = FALSE)
   )
 
-national_items <- item_prices_for_pct_change %>% 
-  select(-c("uuid", "regions", "district", "settlement", "market_final")) %>% 
-  group_by(yrmo, collection_order) %>% 
-  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
 
-markets_items <- item_prices_for_pct_change %>% 
-  select(-c("uuid", "regions", "district")) %>% 
-  group_by(settlement, market_final, yrmo) %>% 
-  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+national_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
+                                               c("uuid", "regions", "district", "settlement", "market_final"),
+                                               c(yrmo, collection_order))
 
-settlement_items <- item_prices_for_pct_change %>% 
-  select(-c("uuid", "market_final")) %>% 
-  group_by(regions, district, settlement, yrmo) %>% 
-  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+markets_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
+                                               c("uuid", "regions", "district"),
+                                               c(settlement, market_final, yrmo))
 
-district_items <- item_prices_for_pct_change %>% 
-  select(-c("uuid", "settlement", "market_final")) %>% 
-  group_by(regions, district, yrmo) %>% 
-  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+settlement_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
+                                                  c("uuid", "market_final"),
+                                                  c(regions, district, settlement, yrmo))
 
-region_items <- item_prices_for_pct_change %>% 
-  select(-c("uuid", "district", "settlement", "market_final")) %>% 
-  group_by(regions, yrmo) %>% 
-  summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-  mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+district_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
+                                                c("uuid", "settlement", "market_final"),
+                                                c(regions, district, yrmo))
 
+region_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
+                                              c("uuid", "district", "settlement", "market_final"),
+                                              c(regions, yrmo))
