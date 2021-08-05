@@ -15,4 +15,16 @@ meb_items <- item_prices %>%
   summarise(across(everything(), ~median(.x, na.rm = TRUE)), .groups = "drop_last")
 
 
+# Calculate proximity: if a price is missing take the mean of settlement, or district, otherwise, regions
+# imputation of NAs
+
+meb_items <- meb_items %>% 
+  group_by(settlement, yrmo) %>% 
+  mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .))) %>% 
+  ungroup() %>% 
+  group_by(district, yrmo) %>% 
+  mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .))) %>% 
+  ungroup() %>% 
+  group_by(regions, yrmo) %>% 
+  mutate(across(where(is.numeric), ~ifelse(is.na(.), mean(., na.rm = TRUE), .))) 
 
