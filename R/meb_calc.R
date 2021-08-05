@@ -2,7 +2,7 @@
 
 # load reference meb data
 ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>% 
-  mutate(yrmo = yrmo_to_include[1])
+  mutate(yrmo = as.numeric(yrmo_to_include[1]))
 
 # median calculations on item prices
 
@@ -116,4 +116,51 @@ meb_items <- meb_items %>%
   # clean the table
   select(-starts_with("price_"), -starts_with("meb1")) %>% 
   # round values
-  mutate(across(where(is.numeric), round, 0))
+  mutate(across(where(is.numeric), round, 0)) 
+
+# combine with reference mebs
+meb_items <- bind_rows(ref_mebs, meb_items) %>% 
+  mutate( collection_order = case_when( yrmo == yrmo_to_include[length(yrmo_to_include)] ~ 4,
+                                        yrmo == yrmo_to_include[length(yrmo_to_include) - 1] ~ 3,
+                                        TRUE ~ 1)
+  ) %>% select(month, yrmo, everything())
+
+# regional
+meb_items_regional <- meb_items %>% 
+  select(-c(district, settlement)) %>% 
+  group_by(regions, yrmo) %>% 
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>% 
+  mutate(across(where(is.numeric), round, 0)) %>%
+  rename(regional_meb_food = meb_food, regional_meb_full = meb_full)
+
+# national
+meb_items_national <- meb_items %>% 
+  select(-c(district, settlement, regions)) %>% 
+  group_by(yrmo) %>% 
+  summarise(across(where(is.numeric), ~mean(.x, na.rm = TRUE))) %>% 
+  mutate(across(where(is.numeric), round, 0), regions = "nationwide") %>%
+  rename(national_meb_food = meb_food, national_meb_full = meb_full)
+
+# # data for ranking
+# data_for_settlement_ranking <- top_settlements <- meb_items %>%
+#   filter(yrmo == yrmo_constructed)
+
+# top three most expensive settlements
+top_settlements <- meb_items %>%
+  filter(yrmo == yrmo_constructed) %>% 
+  ungroup() %>% 
+  select(settlement, meb_full) %>% 
+  arrange(desc(meb_full)) %>% 
+  mutate(rank = row_number()) %>% 
+  filter(rank <= 3)
+
+# bottom three least expensive settlements
+bottom_settlements <- meb_items %>%
+  filter(yrmo == yrmo_constructed) %>% 
+  ungroup() %>% 
+  select(settlement, meb_full) %>% 
+  arrange(meb_full) %>% 
+  mutate(rank = row_number()) %>% 
+  filter(rank <= 3)
+
+rank_settlements <- bind_rows(top_settlements, bottom_settlements)
