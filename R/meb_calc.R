@@ -8,9 +8,9 @@ ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>%
 
 meb_items <- item_prices %>% 
   select(-c(uuid, market_final, price_maize_g, price_underwear, price_charcoal,
-            price_pads, price_DAP, price_NKP, price_malathion, price_millet_f,
-            -contains("_price"), month)
-         ) %>%
+            price_pads, price_DAP, price_NKP, price_malathion, price_millet_f, month),
+         -contains("_price")
+  ) %>%
   group_by(regions, district, settlement, yrmo) %>% 
   summarise(across(everything(), ~median(.x, na.rm = TRUE)), .groups = "drop_last")
 
@@ -63,3 +63,57 @@ meb_items_last_round <- meb_items_for_prev_month_imputation %>%
 
 # meb items for this and last rounds
 meb_items <- bind_rows(meb_items_this_round, meb_items_last_round)
+
+# MEB calculation
+# one-off Items - once a year
+blanket <- 45000
+pans <- 13125
+plates <- 4885
+spoon <- 3538
+cups <- 3985
+mingle <- 1000
+
+meb_items <- meb_items %>% 
+  mutate(
+    # food items
+    meb_maize_f = price_maize_f * 8.7 * 5,
+    meb_beans = price_beans * 5.4 * 5,
+    meb_sorghum = price_sorghum * 1.5 * 5,
+    meb_oil = price_oil * 0.75 * 5,
+    meb_salt = price_salt * 0.15 * 5,
+    meb_milk = price_milk * 0.3 * 5,
+    meb_dodo = price_dodo * 3 * 5,
+    meb_fish = price_fish * 0.6 * 5,
+    meb_cassava = price_cassava * 0.6 *5,
+    # non-food items
+    meb_soap = price_soap * 0.45 * 5,
+    meb_firewood = price_firewood * 1.1 * 30 * 5,
+    # Hygiene items
+    meb1_reusable_pads = 4667,
+    meb1_jerry_can = 1090,
+    meb1_bucket = 632,
+    meb1_hand_washing = 208,
+    meb_hygiene = meb1_reusable_pads + meb1_jerry_can + meb1_bucket + meb1_hand_washing + meb_soap,
+    # extra items
+    meb_clothing = 3806, 
+    meb_water = 3750,
+    meb_livelihoods = 37705,
+    meb_education = 28667,
+    meb_transport = 11001,
+    meb_health = 2669,
+    meb_communication = 4256,
+    meb1_lighting = 5000,
+    # one-off items - once a year
+    meb_other_hdd = sum(blanket, pans, plates, spoon, cups, mingle)/12,
+    # MEB Energy
+    meb_energy = meb1_lighting + meb_firewood,
+    # Food MEB Calcuations
+    meb_food = meb_maize_f + meb_beans + meb_sorghum + meb_oil + meb_milk + meb_cassava + meb_salt + meb_dodo + meb_fish,
+    # Full MEB Calcuations
+    meb_full = meb_food + meb_clothing + meb_water + meb_livelihoods + meb_education + meb_transport +
+      meb_health + meb_communication + meb_hygiene + meb_other_hdd + meb_energy
+  ) %>% 
+  # clean the table
+  select(-starts_with("price_"), -starts_with("meb1")) %>% 
+  # round values
+  mutate(across(where(is.numeric), round, 0))
