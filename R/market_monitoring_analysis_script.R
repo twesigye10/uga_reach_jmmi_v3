@@ -15,6 +15,7 @@ library(butteR)
 
 # source scripts
 source("./R/location_list.R")
+source("./R/meb_calc.R")
 source("./R/functions.R")
 source("./R/extra_r11_cleaning.R")
 source("./R/pct_change_function.R")
@@ -180,3 +181,15 @@ markets_nationwide <- item_prices_for_pct_change %>%
 
 data_merge_summary <- bind_rows(markets_nationwide, markets_per_region)
 
+# calculating MEBs
+
+# load reference meb data
+ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>% 
+  mutate(yrmo = as.numeric(yrmo_to_include[1]))
+
+
+my_data <- meb_cal_func(input_item_prices = item_prices,
+                        input_ref_mebs = ref_mebs, 
+                        input_yrmo_constructed = yrmo_constructed,
+                        input_yrmo_to_include = yrmo_to_include
+                        )
