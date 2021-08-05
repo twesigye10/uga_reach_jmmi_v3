@@ -157,7 +157,7 @@ district_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
 region_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
                                               c("uuid", "district", "settlement", "market_final"),
                                               c(regions, yrmo))
-
+## for data merge
 # counts per area: region and settlements
 markets_per_region <- item_prices_for_pct_change %>% 
   select(regions, yrmo, market_final) %>% 
