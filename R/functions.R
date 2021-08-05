@@ -22,3 +22,10 @@ prices_for_pct_change_summary <- function(input_df, input_select, input_groups) 
     summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
     mutate(across(everything(),~change_nan_and_inf_to_na(.)))
 }
+
+# custom function to rename columns in the same way that has been used for previous FS
+rename_cols_for_factsheet<- function(input_df, input_suffix){
+  df <- input_df %>%
+    rename_with(.cols = !1, .fn = ~str_replace_all(.x, "price_", "")) %>% 
+    rename_with(.cols = !1, .fn = ~paste0(.x, "_perct_", input_suffix))
+}
