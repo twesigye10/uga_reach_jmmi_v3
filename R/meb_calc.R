@@ -1,13 +1,7 @@
 # Uganda Market Monitoring - Food MEB and MEB Calculations
 
-# load reference meb data
-ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>% 
-  mutate(yrmo = as.numeric(yrmo_to_include[1]))
-
-
 meb_cal_func <- function(input_item_prices, input_ref_mebs, input_yrmo_constructed, input_yrmo_to_include ) {
   # median calculations on item prices
-  
   meb_items <- input_item_prices %>% 
     select(-c(uuid, market_final, price_maize_g, price_underwear, price_charcoal,
               price_pads, price_DAP, price_NKP, price_malathion, price_millet_f, month),
@@ -15,7 +9,6 @@ meb_cal_func <- function(input_item_prices, input_ref_mebs, input_yrmo_construct
     ) %>%
     group_by(regions, district, settlement, yrmo) %>% 
     summarise(across(everything(), ~median(.x, na.rm = TRUE)), .groups = "drop_last")
-  
   
   # Calculate proximity: if a price is missing take the mean of settlement, or district, otherwise, regions
   
@@ -169,9 +162,3 @@ meb_cal_func <- function(input_item_prices, input_ref_mebs, input_yrmo_construct
                    meb_items_national = meb_items_national,
                    rank_settlements = rank_settlements)
 }
-
-my_data <- meb_cal_func(input_item_prices = item_prices,
-                        input_ref_mebs = ref_mebs, 
-                        input_yrmo_constructed = yrmo_constructed,
-                        input_yrmo_to_include = yrmo_to_include
-                        )
