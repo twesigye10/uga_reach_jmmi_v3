@@ -247,7 +247,7 @@ df_analysis <- df %>%
   mutate(mobile_accepted = ifelse(grepl("mobile_money", payment_type), "yes", "no"),
          customer_number = as.numeric(customer_number),
          agents_number = as.numeric(agents_number))
-  
+
 
 # load kobo tool
 kobo_tool <- load_questionnaire(df_analysis,
@@ -272,7 +272,7 @@ summary.stats.list <- analysis$results %>%
                      output_folder,"/",
                      butteR::date_file_prefix(),"_",
                      yrmo_constructed, "_jmmi_analysis.csv"))
-  
+
 
 # save analysis to html ---------------------------------------------------
 
@@ -287,4 +287,28 @@ hypegrammaR::map_to_generic_hierarchical_html(resultlist = analysis,
                                               filename = paste0(butteR::date_file_prefix(),
                                                                 "_html_analysis_jmmi",
                                                                 ".html")
-                                              )
+)
+
+# top 3 analysis ----------------------------------------------------------
+
+# Slice result list by areas
+summary.stats.list <- analysis$results %>% 
+  resultlist_summary_statistics_as_one_table() %>% 
+  select(-c(se, min, max, repeat.var, repeat.var.value))
+
+vec1 <- rep(c(1,2,3), 7)
+vec2 <- rep(c(1,2), 10)
+
+# Rename based on choices from kobo
+choices <- read.csv("./inputs/kobo/choices.csv")
+summary.stats.list$dependent.var.value <- choices$label[match(summary.stats.list$dependent.var.value, choices$name)]
+
+# All markets 
+top3_uganda <- summary.stats.list %>% 
+  filter(dependent.var %in% c("payment_type", "safety_reason_less_secure",
+                              "safety_reason_more_secure", "item_scarcity_reason",
+                              "price_increase_item", "price_decrease_item", "challenge"),
+         independent.var.value == "uganda") %>% 
+  arrange(desc(numbers)) %>%
+  group_by(dependent.var) %>%
+  slice(1:3)
