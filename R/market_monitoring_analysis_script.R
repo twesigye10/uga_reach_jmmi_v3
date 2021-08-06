@@ -201,3 +201,37 @@ pct_change_data <- percentage_change_calculations(input_df = df,
                                                   input_meb_items = meb_data$meb_items,
                                                   input_meb_items_regional = meb_data$meb_items_regional,
                                                   input_meb_items_national = meb_data$meb_items_national)
+## Data exports for percentage change and MEB
+list_of_datasets_med <- list("Market mean price" = markets_items,
+                             "Settlement mean price" = pct_change_data$settlement_items,
+                             "District Mean" = district_items,
+                             "Region mean" = region_items,
+                             "National level mean" = national_items,
+                             "Percent change Settlement" = pct_change_data$percent_change_settlement,
+                             "Percent change Region" = pct_change_data$percent_change_region,
+                             "Percent change National" = pct_change_data$percent_change_national,
+                             "Rank settlements" = meb_data$rank_settlements)
+
+openxlsx::write.xlsx(list_of_datasets_med, 
+                     paste0("./outputs/",
+                            output_folder,"/",
+                            butteR::date_file_prefix(),"_",
+                            yrmo_constructed,
+                            "_UGA_JMMI_Means and percentage change.xlsx")
+)
+
+list_of_datasets_meb <- list("Settlement MEB" = meb_data$meb_items,
+                             "Regional MEB" = meb_data$meb_items_regional,
+                             "National MEB" = meb_data$meb_items_national,
+                             "Percent change MEB Settlment" = pct_change_data$meb_percent_change_settlement,
+                             "Percent change MEB Regional" = pct_change_data$meb_percent_change_region,
+                             "Percent change MEB National" = pct_change_data$meb_percent_change_national)
+
+openxlsx::write.xlsx(list_of_datasets_meb, 
+           paste0("./outputs/",
+                  output_folder,"/",
+                  butteR::date_file_prefix(),"_",
+                  yrmo_constructed,
+                  "_UGA_JMMI_MEB and percentage change.xlsx")
+)
+
