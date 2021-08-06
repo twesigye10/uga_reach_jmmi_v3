@@ -255,3 +255,8 @@ kobo_tool <- load_questionnaire(df_analysis,
                                 choices = read_csv("./inputs/kobo/choices.csv"),
                                 choices.label.column.to.use = "label")
 
+# launch analysis and isolate analysis results
+analysis <- from_analysisplan_map_to_output(data = df_analysis, 
+                                            analysisplan = dap, 
+                                            weighting = NULL, 
+                                            questionnaire = kobo_tool )
