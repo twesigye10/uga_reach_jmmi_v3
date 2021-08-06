@@ -140,8 +140,8 @@ item_prices_for_pct_change <- item_prices %>%
 
 
 national_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
-                                               c("uuid", "regions", "district", "settlement", "market_final"),
-                                               c(yrmo, collection_order))
+                                                c("uuid", "regions", "district", "settlement", "market_final"),
+                                                c(yrmo, collection_order))
 
 markets_items <- prices_for_pct_change_summary(item_prices_for_pct_change,
                                                c("uuid", "regions", "district"),
@@ -181,15 +181,23 @@ markets_nationwide <- item_prices_for_pct_change %>%
 
 data_merge_summary <- bind_rows(markets_nationwide, markets_per_region)
 
-# calculating MEBs
 
 # load reference meb data
 ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>% 
   mutate(yrmo = as.numeric(yrmo_to_include[1]))
 
+# calculating MEBs
+meb_data <- meb_cal_func(input_item_prices = item_prices,
+                         input_ref_mebs = ref_mebs, 
+                         input_yrmo_constructed = yrmo_constructed,
+                         input_yrmo_to_include = yrmo_to_include)
 
-my_data <- meb_cal_func(input_item_prices = item_prices,
-                        input_ref_mebs = ref_mebs, 
-                        input_yrmo_constructed = yrmo_constructed,
-                        input_yrmo_to_include = yrmo_to_include
-                        )
+# calculating pecentage changes
+pct_change_data <- percentage_change_calculations(input_df = df,
+                                                  input_yrmo_to_include = yrmo_to_include,
+                                                  input_settlement_items = settlement_items,
+                                                  input_region_items = region_items,
+                                                  input_national_items = national_items,
+                                                  input_meb_items = meb_data$meb_items,
+                                                  input_meb_items_regional = meb_data$meb_items_regional,
+                                                  input_meb_items_national = meb_data$meb_items_national)
