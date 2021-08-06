@@ -29,3 +29,9 @@ rename_cols_for_factsheet<- function(input_df, input_suffix){
     rename_with(.cols = !1, .fn = ~str_replace_all(.x, "price_", "")) %>% 
     rename_with(.cols = !1, .fn = ~paste0(.x, "_perct_", input_suffix))
 }
+
+# combine stats
+resultlist_summary_statistics_as_one_table<-function(results){
+  results %>% 
+    lapply(function(x){x$summary.statistic}) %>% do.call(rbind,.)
+}
