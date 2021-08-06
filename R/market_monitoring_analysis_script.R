@@ -235,3 +235,23 @@ openxlsx::write.xlsx(list_of_datasets_meb,
                             "_UGA_JMMI_MEB and percentage change.xlsx")
 )
 
+
+# Market Functionality Page -----------------------------------------------
+
+# load analysis plan
+dap <- load_analysisplan("./inputs/dap/jmmi_dap_v1.csv")
+
+# prepare dataset for analysis
+df_analysis <- df %>% 
+  filter(yrmo == yrmo_constructed) %>% 
+  mutate(mobile_accepted = ifelse(grepl("mobile_money", payment_type), "yes", "no"),
+         customer_number = as.numeric(customer_number),
+         agents_number = as.numeric(agents_number))
+  
+
+# load kobo tool
+kobo_tool <- load_questionnaire(df_analysis,
+                                questions = read_csv("./inputs/kobo/questions.csv"),
+                                choices = read_csv("./inputs/kobo/choices.csv"),
+                                choices.label.column.to.use = "label")
+
