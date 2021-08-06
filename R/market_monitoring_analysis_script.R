@@ -273,3 +273,18 @@ summary.stats.list <- analysis$results %>%
                      butteR::date_file_prefix(),"_",
                      yrmo_constructed, "_jmmi_analysis.csv"))
   
+
+# save analysis to html ---------------------------------------------------
+
+hypegrammaR::map_to_generic_hierarchical_html(resultlist = analysis,
+                                              render_result_with = hypegrammaR:::from_result_map_to_md_table,
+                                              by_analysisplan_columns = c("research.question","indicator"),
+                                              by_prefix = c("RQ:", "Indicator: "),
+                                              level = 2,
+                                              questionnaire = kobo_tool,
+                                              label_varnames = TRUE,
+                                              dir = paste0("./outputs/", output_folder),
+                                              filename = paste0(butteR::date_file_prefix(),
+                                                                "_html_analysis_jmmi",
+                                                                ".html")
+                                              )
