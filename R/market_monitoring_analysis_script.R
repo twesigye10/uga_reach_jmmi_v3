@@ -251,8 +251,8 @@ df_analysis <- df %>%
 
 # load kobo tool
 kobo_tool <- load_questionnaire(df_analysis,
-                                questions = read_csv("./inputs/kobo/questions.csv"),
-                                choices = read_csv("./inputs/kobo/choices.csv"),
+                                questions = read.csv("./inputs/kobo/questions.csv"),
+                                choices = read.csv("./inputs/kobo/choices.csv"),
                                 choices.label.column.to.use = "label")
 
 # launch analysis and isolate analysis results
@@ -260,3 +260,16 @@ analysis <- from_analysisplan_map_to_output(data = df_analysis,
                                             analysisplan = dap, 
                                             weighting = NULL, 
                                             questionnaire = kobo_tool )
+
+
+# summary statistics list -------------------------------------------------
+
+summary.stats.list <- analysis$results %>% 
+  map(function(x) { map_to_labeled(result = x, questionnaire = kobo_tool) }) %>% 
+  resultlist_summary_statistics_as_one_table() %>% 
+  select(-c(se, min, max)) %>% 
+  map_to_file(paste0("./outputs/",
+                     output_folder,"/",
+                     butteR::date_file_prefix(),"_",
+                     yrmo_constructed, "_jmmi_analysis.csv"))
+  
