@@ -48,9 +48,9 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
   # the process is the same, put them in a list so we can purrr through
   
   pct_change_items_list_all <- list(settlement_items, input_region_items, input_national_items) %>% 
-    set_names(c("settlement", "regional", "national"))
+    set_names(c("settlement", "regions", "national"))
   
-  analysis_level <- c("settlement", "regional", "national")
+  analysis_level <- c("settlement", "regions", "national")
   
   # calculate % change between this round and base and this round and last round
   
@@ -82,9 +82,9 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
   # Calc % change in mebs at settlement, regional and national  level -------
   
   meb_items_for_pct_change_list <- list(input_meb_items, input_meb_items_regional, input_meb_items_national) %>% 
-    set_names(c("settlement", "regional", "national"))
+    set_names(c("settlement", "regions", "national"))
   
-  meb_analysis_level <- c("settlement", "regional", "national")
+  meb_analysis_level <- c("settlement", "regions", "national")
   
   meb_pct_change_all_levels <- meb_items_for_pct_change_list %>% 
     map2(meb_analysis_level, function(x, y) {
@@ -119,13 +119,13 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
   
   # extract regional results in format/schema needed for downstream processes
   # combine different results, get price changes with meb price changes  (this round to last round)
-  change_region_last_round<- left_join(pct_change_all$regional, meb_pct_change_all_levels$regional) %>%
+  change_region_last_round<- left_join(pct_change_all$regions, meb_pct_change_all_levels$regions) %>%
     select(-ends_with("march"))
   # combine different results, get price changes with meb price changes  (this round to reference round)
-  change_region_march<- left_join(pct_change_all$regional, meb_pct_change_all_levels$regional) %>%
+  change_region_march<- left_join(pct_change_all$regions, meb_pct_change_all_levels$regions) %>%
     select(-ends_with("last_round"))
   # combine results
-  regional_list <- list(pct_change_all$regional,
+  regional_list <- list(pct_change_all$regions,
                         change_region_last_round,
                         change_region_march
   )
@@ -159,7 +159,7 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
     percent_change_region = percent_change_region,
     percent_change_national = percent_change_national,
     meb_percent_change_settlement = meb_pct_change_all_levels$settlement,
-    meb_percent_change_region = meb_pct_change_all_levels$regional,
+    meb_percent_change_region = meb_pct_change_all_levels$regions,
     meb_percent_change_national = meb_pct_change_all_levels$national
   )
   
