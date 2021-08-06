@@ -265,7 +265,10 @@ analysis <- from_analysisplan_map_to_output(data = df_analysis,
 # summary statistics list -------------------------------------------------
 
 summary.stats.list <- analysis$results %>% 
-  map(function(x) { map_to_labeled(result = x, questionnaire = kobo_tool) }) %>% 
+  map(function(x) { map_to_labeled(result = x, questionnaire = kobo_tool) }) 
+
+# save analysis to a file
+summary.stats.list %>% 
   resultlist_summary_statistics_as_one_table() %>% 
   select(-c(se, min, max)) %>% 
   map_to_file(paste0("./outputs/",
