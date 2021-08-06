@@ -228,10 +228,10 @@ list_of_datasets_meb <- list("Settlement MEB" = meb_data$meb_items,
                              "Percent change MEB National" = pct_change_data$meb_percent_change_national)
 
 openxlsx::write.xlsx(list_of_datasets_meb, 
-           paste0("./outputs/",
-                  output_folder,"/",
-                  butteR::date_file_prefix(),"_",
-                  yrmo_constructed,
-                  "_UGA_JMMI_MEB and percentage change.xlsx")
+                     paste0("./outputs/",
+                            output_folder,"/",
+                            butteR::date_file_prefix(),"_",
+                            yrmo_constructed,
+                            "_UGA_JMMI_MEB and percentage change.xlsx")
 )
 
