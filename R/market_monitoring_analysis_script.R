@@ -416,5 +416,7 @@ perct_vars_southwest <- non_perct_vars_analysis(input_summary_stats = summary.st
 perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
                                                    input_dependent_vars = perct_vars_dependent_vars,
                                                    input_independent_var = "west nile")
-# combine percent analysis
-perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnile)
+# combine percent analysis and multiply by 100
+perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnile) %>% 
+  mutate(across(where(is.numeric), ~.*100))
+
