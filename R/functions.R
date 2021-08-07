@@ -53,6 +53,7 @@ top_n_analysis <- function(input_summary_stats, input_n, input_dependent_vars,
     pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
 }
 
+# non percentage vars analysis
 non_perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
                            input_independent_var) {
   input_summary_stats %>% 
@@ -62,4 +63,16 @@ non_perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
     ungroup() %>% 
     select(new_var, numbers) %>% 
     pivot_wider(names_from = new_var, values_from = c(numbers) )
+}
+
+# percentage vars analysis
+perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
+                           input_independent_var) {
+  input_summary_stats %>% 
+    filter(dependent.var %in% {{input_dependent_vars}},
+           independent.var.value == {{input_independent_var}}) %>% 
+    mutate(new_var = paste0(independent.var.value, "_", dependent.var, "_", dependent.var.value)) %>% 
+    ungroup() %>% 
+    select(dependent.var.value, new_var, numbers) %>% 
+    pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
 }
