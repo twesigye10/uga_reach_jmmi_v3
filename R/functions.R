@@ -35,3 +35,20 @@ resultlist_summary_statistics_as_one_table<-function(results){
   results %>% 
     lapply(function(x){x$summary.statistic}) %>% do.call(rbind,.)
 }
+
+# top n from summary statistics
+top_n_analysis <- function(input_summary_stats, input_n, input_dependent_vars,
+                           input_independent_var) {
+  input_summary_stats %>% 
+    filter(dependent.var %in% input_vars,
+           independent.var.value == input_independent_var) %>% 
+    arrange(desc(numbers)) %>%
+    group_by(dependent.var) %>%
+    slice_head(input_n) %>% 
+    mutate(rank = row_number(),
+           new_var = paste0(independent.var.value, "_", dependent.var, "_", rank)
+    ) %>% 
+    ungroup() %>% 
+    select(new_var, numbers, dependent.var.value) %>% 
+    pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
+}
