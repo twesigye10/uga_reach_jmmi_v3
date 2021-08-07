@@ -311,4 +311,20 @@ top3_uganda <- summary.stats.list %>%
          independent.var.value == "uganda") %>% 
   arrange(desc(numbers)) %>%
   group_by(dependent.var) %>%
-  slice(1:3)
+  slice_head(3) %>% 
+  mutate(rank = row_number(),
+         new_var = paste0(independent.var.value, "_", dependent.var, "_", rank)
+         ) %>% 
+  ungroup() %>% 
+  select(new_var, numbers, dependent.var.value) %>% 
+  pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
+
+top3_dependent_vars <- c("payment_type", "safety_reason_less_secure",
+                         "safety_reason_more_secure", "item_scarcity_reason",
+                         "price_increase_item", "price_decrease_item", "challenge")
+
+top3_uganda <- top_n_analysis(input_summary_stats = summary.stats.list,
+                              input_n = 3, 
+                              input_dependent_vars = top3_dependent_vars, 
+                              input_independent_var = "uganda"
+                              )
