@@ -52,3 +52,14 @@ top_n_analysis <- function(input_summary_stats, input_n, input_dependent_vars,
     select(new_var, numbers, dependent.var.value) %>% 
     pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
 }
+
+non_perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
+                           input_independent_var) {
+  input_summary_stats %>% 
+    filter(dependent.var %in% {{input_dependent_vars}},
+           independent.var.value == {{input_independent_var}}) %>% 
+    mutate(new_var = paste0(independent.var.value, "_", dependent.var)) %>% 
+    ungroup() %>% 
+    select(new_var, numbers) %>% 
+    pivot_wider(names_from = new_var, values_from = c(numbers) )
+}
