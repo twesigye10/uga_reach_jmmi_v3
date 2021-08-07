@@ -344,5 +344,29 @@ top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_dependent_vars = top2_dependent_vars, 
                                  input_independent_var = "west nile" )
 
+# top 2 analysis - decrease in price --------------------------------------
+
+# all markets
+top2_price_decrease_dependent_vars <- c("cereal_decrease_reason", "cassava_decrease_reason",
+                                        "beans_decrease_reason", "vegetables_decrease_reason",
+                                        "milk_decrease_reason", "fish_decrease_reason",
+                                        "oil_decrease_reason", "salt_decrease_reason",
+                                        "wash_decrease_reason", "energy_decrease_reason")
+
+top2_uganda_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                  input_n = 2, 
+                                  input_dependent_vars = top2_price_decrease_dependent_vars, 
+                                  input_independent_var = "uganda" )
+# South West region
+top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                     input_n = 2, 
+                                     input_dependent_vars = top2_price_decrease_dependent_vars, 
+                                     input_independent_var = "south west" )
+# West Nile region
+top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                     input_n = 2, 
+                                     input_dependent_vars = top2_price_decrease_dependent_vars, 
+                                     input_independent_var = "west nile" )
+
 
 
