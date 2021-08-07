@@ -296,9 +296,6 @@ summary.stats.list <- analysis$results %>%
   resultlist_summary_statistics_as_one_table() %>% 
   select(-c(se, min, max, repeat.var, repeat.var.value))
 
-vec1 <- rep(c(1,2,3), 7)
-vec2 <- rep(c(1,2), 10)
-
 # Rename based on choices from kobo
 choices <- read.csv("./inputs/kobo/choices.csv")
 summary.stats.list$dependent.var.value <- choices$label[match(summary.stats.list$dependent.var.value, choices$name)]
