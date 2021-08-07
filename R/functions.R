@@ -40,7 +40,7 @@ resultlist_summary_statistics_as_one_table<-function(results){
 top_n_analysis <- function(input_summary_stats, input_n, input_dependent_vars,
                            input_independent_var) {
   input_summary_stats %>% 
-    filter(dependent.var %in% input_vars,
+    filter(dependent.var %in% input_dependent_vars,
            independent.var.value == input_independent_var) %>% 
     arrange(desc(numbers)) %>%
     group_by(dependent.var) %>%
