@@ -369,4 +369,12 @@ top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
                                      input_independent_var = "west nile" )
 
 
+# bind all together in one data merge-ready file --------------------------
 
+# bind all together , multiply by 100 and round up
+
+top_analysis <- bind_cols(top3_uganda, top3_southwest, top3_westnile, 
+                          top2_uganda, top2_uganda_dec, top2_southwest,
+                          top2_southwest_dec, top2_westnile, top2_westnile_dec) %>% 
+    mutate(across(where(is.numeric), ~.*100))
+ 
