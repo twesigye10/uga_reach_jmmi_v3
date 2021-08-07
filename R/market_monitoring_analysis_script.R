@@ -304,21 +304,6 @@ choices <- read.csv("./inputs/kobo/choices.csv")
 summary.stats.list$dependent.var.value <- choices$label[match(summary.stats.list$dependent.var.value, choices$name)]
 
 # All markets 
-top3_uganda <- summary.stats.list %>% 
-  filter(dependent.var %in% c("payment_type", "safety_reason_less_secure",
-                              "safety_reason_more_secure", "item_scarcity_reason",
-                              "price_increase_item", "price_decrease_item", "challenge"),
-         independent.var.value == "uganda") %>% 
-  arrange(desc(numbers)) %>%
-  group_by(dependent.var) %>%
-  slice_head(3) %>% 
-  mutate(rank = row_number(),
-         new_var = paste0(independent.var.value, "_", dependent.var, "_", rank)
-         ) %>% 
-  ungroup() %>% 
-  select(new_var, numbers, dependent.var.value) %>% 
-  pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
-
 top3_dependent_vars <- c("payment_type", "safety_reason_less_secure",
                          "safety_reason_more_secure", "item_scarcity_reason",
                          "price_increase_item", "price_decrease_item", "challenge")
