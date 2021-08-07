@@ -291,16 +291,16 @@ hypegrammaR::map_to_generic_hierarchical_html(resultlist = analysis,
 
 # top 3 analysis ----------------------------------------------------------
 
-# Slice result list by areas
+# slice result list by areas
 summary.stats.list <- analysis$results %>% 
   resultlist_summary_statistics_as_one_table() %>% 
   select(-c(se, min, max, repeat.var, repeat.var.value))
 
-# Rename based on choices from kobo
+# rename based on choices from kobo
 choices <- read.csv("./inputs/kobo/choices.csv")
 summary.stats.list$dependent.var.value <- choices$label[match(summary.stats.list$dependent.var.value, choices$name)]
 
-# All markets 
+# all markets 
 top3_dependent_vars <- c("payment_type", "safety_reason_less_secure",
                          "safety_reason_more_secure", "item_scarcity_reason",
                          "price_increase_item", "price_decrease_item", "challenge")
@@ -309,13 +309,40 @@ top3_uganda <- top_n_analysis(input_summary_stats = summary.stats.list,
                               input_n = 3, 
                               input_dependent_vars = top3_dependent_vars, 
                               input_independent_var = "uganda" )
-# South West Region
+# South West region
 top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_n = 3, 
                                  input_dependent_vars = top3_dependent_vars, 
                                  input_independent_var = "south west" )
-# West Nile Region
+# West Nile region
 top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_n = 3, 
                                  input_dependent_vars = top3_dependent_vars, 
                                  input_independent_var = "west nile" )
+
+# top 2 analysis - increase in price --------------------------------------
+
+# all markets
+top2_dependent_vars <- c("cereal_increase_reason", "cassava_increase_reason",
+                         "beans_increase_reason", "vegetables_increase_reason",
+                         "milk_increase_reason", "fish_increase_reason",
+                         "oil_increase_reason", "salt_increase_reason",
+                         "wash_increase_reason", "energy_increase_reason")
+
+top2_uganda <- top_n_analysis(input_summary_stats = summary.stats.list,
+                              input_n = 2, 
+                              input_dependent_vars = top2_dependent_vars, 
+                              input_independent_var = "uganda" )
+# South West region
+top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                 input_n = 2, 
+                                 input_dependent_vars = top2_dependent_vars, 
+                                 input_independent_var = "south west" )
+# West Nile region
+top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                 input_n = 2, 
+                                 input_dependent_vars = top2_dependent_vars, 
+                                 input_independent_var = "west nile" )
+
+
+
