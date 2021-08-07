@@ -376,12 +376,14 @@ top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
 top_analysis <- bind_cols(top3_uganda, top3_southwest, top3_westnile, 
                           top2_uganda, top2_uganda_dec, top2_southwest,
                           top2_southwest_dec, top2_westnile, top2_westnile_dec) %>% 
-    mutate(across(where(is.numeric), ~.*100))
+  mutate(across(where(is.numeric), ~.*100))
 
 
 # select one and other analysis spread ------------------------------------
 
+# non percentage vars analysis
 non_perct_vars_dependent_vars = c("agents_number", "customer_number")
+
 # all markets
 non_perct_vars <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
                                           input_dependent_vars = non_perct_vars_dependent_vars,
@@ -389,13 +391,30 @@ non_perct_vars <- non_perct_vars_analysis(input_summary_stats = summary.stats.li
 
 # South West
 non_perct_vars_southwest <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
-                                          input_dependent_vars = non_perct_vars_dependent_vars,
-                                          input_independent_var = "south west")
+                                                    input_dependent_vars = non_perct_vars_dependent_vars,
+                                                    input_independent_var = "south west")
 
 # West Nile
 non_perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
-                                          input_dependent_vars = non_perct_vars_dependent_vars,
-                                          input_independent_var = "west nile")
+                                                   input_dependent_vars = non_perct_vars_dependent_vars,
+                                                   input_independent_var = "west nile")
 # combine non-percent analysis
-
 non_perct_vars_fin <- bind_cols(non_perct_vars, non_perct_vars_southwest, non_perct_vars_westnile)
+
+# percentage vars analysis
+perct_vars_dependent_vars = c("mobile_accepted", "vendor_number", "vendors_change",
+                              "safety", "item_scarcity", "stock_runout")
+# all markets
+perct_vars <- perct_vars_analysis(input_summary_stats = summary.stats.list, 
+                                  input_dependent_vars = perct_vars_dependent_vars,
+                                  input_independent_var = "uganda")
+# South West
+perct_vars_southwest <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
+                                                    input_dependent_vars = perct_vars_dependent_vars,
+                                                    input_independent_var = "south west")
+# West Nile
+perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
+                                                   input_dependent_vars = perct_vars_dependent_vars,
+                                                   input_independent_var = "west nile")
+# combine percent analysis
+perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnile)
