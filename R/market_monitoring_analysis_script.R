@@ -308,5 +308,14 @@ top3_dependent_vars <- c("payment_type", "safety_reason_less_secure",
 top3_uganda <- top_n_analysis(input_summary_stats = summary.stats.list,
                               input_n = 3, 
                               input_dependent_vars = top3_dependent_vars, 
-                              input_independent_var = "uganda"
-                              )
+                              input_independent_var = "uganda" )
+# South West Region
+top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                 input_n = 3, 
+                                 input_dependent_vars = top3_dependent_vars, 
+                                 input_independent_var = "south west" )
+# West Nile Region
+top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+                                 input_n = 3, 
+                                 input_dependent_vars = top3_dependent_vars, 
+                                 input_independent_var = "west nile" )
