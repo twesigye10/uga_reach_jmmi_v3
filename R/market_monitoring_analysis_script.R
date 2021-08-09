@@ -113,7 +113,7 @@ item_prices <- df %>%
   select(uuid, yrmo, month, regions, district, settlement, market_final,
          contains("price"), starts_with("weight_"), -starts_with("price_increase"),
          -starts_with("price_decrease"), -ends_with(".prices"), -starts_with("challenge.")
-         ) %>% 
+  ) %>% 
   ungroup() %>% 
   mutate(
     price_dodo = price_dodo/weight_dodo,
@@ -316,9 +316,9 @@ top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_independent_var = "south west" )
 # West Nile region
 top3_westnile <- top_n_analysis(input_summary_stats = summary.stats.list,
-                                 input_n = 3, 
-                                 input_dependent_vars = top3_dependent_vars, 
-                                 input_independent_var = "west nile" )
+                                input_n = 3, 
+                                input_dependent_vars = top3_dependent_vars, 
+                                input_independent_var = "west nile" )
 
 # top 2 analysis - increase in price --------------------------------------
 
@@ -340,9 +340,9 @@ top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_independent_var = "south west" )
 # West Nile region
 top2_westnile <- top_n_analysis(input_summary_stats = summary.stats.list,
-                                 input_n = 2, 
-                                 input_dependent_vars = top2_dependent_vars, 
-                                 input_independent_var = "west nile" )
+                                input_n = 2, 
+                                input_dependent_vars = top2_dependent_vars, 
+                                input_independent_var = "west nile" )
 
 # top 2 analysis - decrease in price --------------------------------------
 
@@ -364,9 +364,9 @@ top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
                                      input_independent_var = "south west" )
 # West Nile region
 top2_westnile_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
-                                     input_n = 2, 
-                                     input_dependent_vars = top2_price_decrease_dependent_vars, 
-                                     input_independent_var = "west nile" )
+                                    input_n = 2, 
+                                    input_dependent_vars = top2_price_decrease_dependent_vars, 
+                                    input_independent_var = "west nile" )
 
 
 # bind all together in one data merge-ready file --------------------------
@@ -410,12 +410,12 @@ perct_vars <- perct_vars_analysis(input_summary_stats = summary.stats.list,
                                   input_independent_var = "uganda")
 # South West
 perct_vars_southwest <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
-                                                    input_dependent_vars = perct_vars_dependent_vars,
-                                                    input_independent_var = "south west")
+                                                input_dependent_vars = perct_vars_dependent_vars,
+                                                input_independent_var = "south west")
 # West Nile
 perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
-                                                   input_dependent_vars = perct_vars_dependent_vars,
-                                                   input_independent_var = "west nile")
+                                               input_dependent_vars = perct_vars_dependent_vars,
+                                               input_independent_var = "west nile")
 # combine percent analysis and multiply by 100
 perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnile) %>% 
   mutate(across(where(is.numeric), ~.*100))
@@ -438,9 +438,9 @@ national <- jmmi_datamerge_filter_rename(input_df = national_items, input_yrmo_c
                                          input_unselection = c(collection_order, price_nails), input_level = "national")
 # extracting relevant data - regional
 regional_sw <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
-                                         input_unselection = c(collection_order, price_nails), input_level = "southwest")
+                                            input_unselection = c(collection_order, price_nails), input_level = "southwest")
 regional_wn <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
-                                         input_unselection = c(collection_order, price_nails), input_level = "westnile")
+                                            input_unselection = c(collection_order, price_nails), input_level = "westnile")
 # extracting relevant data - settlement
 settlement_dm <- settlement_items %>% 
   filter(yrmo == yrmo_constructed) %>% 
@@ -453,14 +453,66 @@ settlement_dm <- settlement_items %>%
 
 # Percentage Change National #
 
-change_national_march <- pct_change_data$change_national_march
+change_national_march <- pct_change_data$change_national_march %>% 
+  mutate(collection_order_perct_march = NULL) %>% 
+  rename_with(.cols = everything(), .fn = ~paste0("national_", .x))
 
-# filter_ungroup_select_rename 1111111
-# filter_select_rename
-# 
-# select_ungroup_gather_mutate_select_pivot_wider 1
-# filter_ungroup_select_gather_mutate_select_pivot_wider 11
-# 
-# mutate_ungroup_select_pivot_wider 11
+change_national_last_round <- pct_change_data$change_national_march %>% 
+  mutate(collection_order_perct_last_round = NULL) %>% 
+  rename_with(.cols = everything(), .fn = ~paste0("national_", .x))
 
-# gather_mutate_ungroup_select_pivot_wider 1
+# Percentage Change Regional #
+
+# extracting relevant data - regional
+
+percent_change_region_sw <- pct_change_data$percent_change_region %>% 
+  filter(regions == "south west") %>% 
+  ungroup() %>% 
+  select(-c(collection_order_perct_last_round, collection_order_perct_march, regions) ) %>% 
+  rename_with(.cols = everything(), .fn = ~paste0("southwest_", .x))
+percent_change_region_wn <- pct_change_data$percent_change_region %>% 
+  filter(regions == "west nile") %>% 
+  ungroup() %>% 
+  select(-c(collection_order_perct_last_round, collection_order_perct_march, regions) ) %>% 
+  rename_with(.cols = everything(), .fn = ~paste0("westnile_", .x))
+
+# Percentage Change Settlement #
+percent_change_set <- pct_change_data$percent_change_settlement %>% 
+  select(-contains("collection_")) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  mutate(new_var = paste0(settlement, "_", var_name)) %>% 
+  select(new_var, var_value) %>% 
+  pivot_wider(names_from = new_var, values_from = var_value)
+
+#            MEBs            #
+
+# Settlement data merge
+meb_set <- meb_data$meb_items %>% 
+  filter(yrmo == yrmo_constructed) %>% 
+  ungroup() %>% 
+  select(-c(collection_order, month, regions, district, yrmo)) %>% 
+  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  mutate(new_var = paste0(settlement, "_", var_name)) %>% 
+  select(new_var, var_value) %>% 
+  pivot_wider(names_from = new_var, values_from = var_value)
+
+# Regional data merge
+
+meb_reg_sw <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_regional, input_yrmo_constructed = yrmo_constructed,
+                                           input_unselection = c(regions, month, collection_order, yrmo), input_level = "southwest")
+meb_reg_wn <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_regional, input_yrmo_constructed = yrmo_constructed,
+                                           input_unselection = c(regions, month, collection_order, yrmo), input_level = "westnile")
+# National data merge
+
+meb_nat <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_national, input_yrmo_constructed = yrmo_constructed,
+                                        input_unselection = c(month, collection_order), input_level = "national")
+
+#         MEB Ranks          #
+
+rank_dm <- meb_data$rank_settlements %>% 
+  mutate(new_var = paste0("expansive_rank_", rank)) %>% 
+  ungroup() %>% 
+  select(-c(rank, meb_full)) %>% 
+  pivot_wider(names_from = new_var, values_from = settlement)
+
