@@ -76,3 +76,12 @@ perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
     select(dependent.var.value, new_var, numbers) %>% 
     pivot_wider(names_from = new_var, values_from = c(numbers, dependent.var.value) )
 }
+
+# jmmi data merge filter_ungroup_select_rename
+jmmi_datamerge_filter_rename <- function(input_df, input_yrmo_constructed, input_unselection) {
+  input_df %>% 
+    filter(yrmo == {{input_yrmo_constructed}}) %>% 
+    ungroup() %>% 
+    select(-{{input_unselection}}) %>% 
+    rename_with(.cols = everything(), .fn = ~paste0("national_", .x))
+}
