@@ -55,7 +55,7 @@ top_n_analysis <- function(input_summary_stats, input_n, input_dependent_vars,
 
 # non percentage vars analysis
 non_perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
-                           input_independent_var) {
+                                    input_independent_var) {
   input_summary_stats %>% 
     filter(dependent.var %in% {{input_dependent_vars}},
            independent.var.value == {{input_independent_var}}) %>% 
@@ -67,7 +67,7 @@ non_perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
 
 # percentage vars analysis
 perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
-                           input_independent_var) {
+                                input_independent_var) {
   input_summary_stats %>% 
     filter(dependent.var %in% {{input_dependent_vars}},
            independent.var.value == {{input_independent_var}}) %>% 
@@ -79,9 +79,27 @@ perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
 
 # jmmi data merge filter_ungroup_select_rename
 jmmi_datamerge_filter_rename <- function(input_df, input_yrmo_constructed, input_unselection, input_level) {
-  input_df %>% 
-    filter(yrmo == {{input_yrmo_constructed}}) %>% 
-    ungroup() %>% 
-    select(-{{input_unselection}}) %>% 
-    rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
+  
+  if(input_level == "national"){
+    input_df %>% 
+      filter(yrmo == {{input_yrmo_constructed}}) %>% 
+      ungroup() %>% 
+      select(-{{input_unselection}}) %>% 
+      rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
+  }
+  if(input_level == "southwest"){
+    input_df %>% 
+      filter(yrmo == {{input_yrmo_constructed}} & regions == "south west") %>% 
+      ungroup() %>% 
+      select(-{{input_unselection}}) %>% 
+      rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
+  }
+  if(input_level == "westnile"){
+    input_df %>% 
+      filter(yrmo == {{input_yrmo_constructed}} & regions == "west nile") %>% 
+      ungroup() %>% 
+      select(-{{input_unselection}}) %>% 
+      rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
+  }
+  
 }
