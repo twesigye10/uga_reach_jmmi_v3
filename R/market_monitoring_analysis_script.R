@@ -420,3 +420,47 @@ perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.sta
 perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnile) %>% 
   mutate(across(where(is.numeric), ~.*100))
 
+
+# Data Merge Wrangling ----------------------------------------------------
+
+# number of things assessed
+num_assessed_merge <- data_merge_summary %>% 
+  pivot_longer(cols = starts_with("num_"), names_to = "num_market_assessed", values_to = "num_assessed") %>% 
+  mutate(new_var = paste0(num_market_assessed, "_", level)) %>% 
+  ungroup() %>% 
+  select(new_var, num_assessed) %>% 
+  pivot_wider(names_from = new_var, values_from = c(num_assessed))
+
+#       Items Prices         #
+
+# extracting relevant data - national
+national <- jmmi_datamerge_filter_rename(input_df = national_items, input_yrmo_constructed = yrmo_constructed,
+                                         input_unselection = c(collection_order, price_nails), input_level = "national")
+# extracting relevant data - regional
+regional_sw <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
+                                         input_unselection = c(collection_order, price_nails), input_level = "southwest")
+regional_wn <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
+                                         input_unselection = c(collection_order, price_nails), input_level = "westnile")
+# extracting relevant data - settlement
+settlement_dm <- settlement_items %>% 
+  filter(yrmo == yrmo_constructed) %>% 
+  ungroup() %>% 
+  select(-c(collection_order, district, regions, price_nails, yrmo)) %>% 
+  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  mutate(new_var = paste0(settlement, "_", var_name)) %>% 
+  select(new_var, var_value) %>% 
+  pivot_wider(names_from = new_var, values_from = var_value)
+
+# Percentage Change National #
+
+change_national_march <- pct_change_data$
+
+# filter_ungroup_select_rename 1111111
+# filter_select_rename
+# 
+# select_ungroup_gather_mutate_select_pivot_wider 1
+# filter_ungroup_select_gather_mutate_select_pivot_wider 11
+# 
+# mutate_ungroup_select_pivot_wider 11
+
+# gather_mutate_ungroup_select_pivot_wider 1
