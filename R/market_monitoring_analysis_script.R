@@ -409,11 +409,11 @@ perct_vars <- perct_vars_analysis(input_summary_stats = summary.stats.list,
                                   input_dependent_vars = perct_vars_dependent_vars,
                                   input_independent_var = "uganda")
 # South West
-perct_vars_southwest <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
+perct_vars_southwest <- perct_vars_analysis(input_summary_stats = summary.stats.list, 
                                                 input_dependent_vars = perct_vars_dependent_vars,
                                                 input_independent_var = "south west")
 # West Nile
-perct_vars_westnile <- non_perct_vars_analysis(input_summary_stats = summary.stats.list, 
+perct_vars_westnile <- perct_vars_analysis(input_summary_stats = summary.stats.list, 
                                                input_dependent_vars = perct_vars_dependent_vars,
                                                input_independent_var = "west nile")
 # combine percent analysis and multiply by 100
@@ -431,16 +431,17 @@ num_assessed_merge <- data_merge_summary %>%
   select(new_var, num_assessed) %>% 
   pivot_wider(names_from = new_var, values_from = c(num_assessed))
 
-#       Items Prices         #
+#       Items Prices         #collection_order
 
+item_prices_cols_to_remove <- c("collection_order", "price_nails", "month")
 # extracting relevant data - national
 national <- jmmi_datamerge_filter_rename(input_df = national_items, input_yrmo_constructed = yrmo_constructed,
-                                         input_unselection = c(collection_order, price_nails), input_level = "national")
+                                         input_unselection = item_prices_cols_to_remove, input_level = "national")
 # extracting relevant data - regional
 regional_sw <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
-                                            input_unselection = c(collection_order, price_nails), input_level = "southwest")
+                                            input_unselection = item_prices_cols_to_remove, input_level = "southwest")
 regional_wn <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
-                                            input_unselection = c(collection_order, price_nails), input_level = "westnile")
+                                            input_unselection = item_prices_cols_to_remove, input_level = "westnile")
 # extracting relevant data - settlement
 settlement_dm <- settlement_items %>% 
   filter(yrmo == yrmo_constructed) %>% 
@@ -498,15 +499,15 @@ meb_set <- meb_data$meb_items %>%
   pivot_wider(names_from = new_var, values_from = var_value)
 
 # Regional data merge
-
+meb_cols_to_remove <- c("regions", "month", "collection_order", "yrmo")
 meb_reg_sw <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_regional, input_yrmo_constructed = yrmo_constructed,
-                                           input_unselection = c(regions, month, collection_order, yrmo), input_level = "southwest")
+                                           input_unselection = meb_cols_to_remove, input_level = "southwest")
 meb_reg_wn <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_regional, input_yrmo_constructed = yrmo_constructed,
-                                           input_unselection = c(regions, month, collection_order, yrmo), input_level = "westnile")
+                                           input_unselection = meb_cols_to_remove, input_level = "westnile")
 # National data merge
 
 meb_nat <- jmmi_datamerge_filter_rename(input_df = meb_data$meb_items_national, input_yrmo_constructed = yrmo_constructed,
-                                        input_unselection = c(month, collection_order), input_level = "national")
+                                        input_unselection = c("month", "collection_order"), input_level = "national")
 
 #         MEB Ranks          #
 
@@ -540,10 +541,10 @@ data_merge <- bind_cols(top_analysis,
   mutate(across(where(is.numeric), ~round(., 0)))
 
 # save the file
-write_csv(data_merge,
-          paste0("outputs/",
+write_csv(x = data_merge,
+          file = paste0("outputs/",
                  output_folder,
                  "/",
-                 butteR::load_audit(), "_",
+                 butteR::date_file_prefix(), "_",
                  yrmo_constructed,
                  "_jmmi_data_merge.csv"), na = "n/a" )
