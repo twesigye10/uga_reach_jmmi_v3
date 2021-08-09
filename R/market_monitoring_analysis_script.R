@@ -363,7 +363,7 @@ top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
                                      input_dependent_vars = top2_price_decrease_dependent_vars, 
                                      input_independent_var = "south west" )
 # West Nile region
-top2_southwest_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
+top2_westnile_dec <- top_n_analysis(input_summary_stats = summary.stats.list,
                                      input_n = 2, 
                                      input_dependent_vars = top2_price_decrease_dependent_vars, 
                                      input_independent_var = "west nile" )
@@ -453,7 +453,7 @@ settlement_dm <- settlement_items %>%
 
 # Percentage Change National #
 
-change_national_march <- pct_change_data$
+change_national_march <- pct_change_data$change_national_march
 
 # filter_ungroup_select_rename 1111111
 # filter_select_rename
