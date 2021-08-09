@@ -113,7 +113,7 @@ item_prices <- df %>%
   select(uuid, yrmo, month, regions, district, settlement, market_final,
          contains("price"), starts_with("weight_"), -starts_with("price_increase"),
          -starts_with("price_decrease"), -ends_with(".prices"), -starts_with("challenge.")
-  ) %>% 
+         ) %>% 
   ungroup() %>% 
   mutate(
     price_dodo = price_dodo/weight_dodo,
@@ -315,7 +315,7 @@ top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_dependent_vars = top3_dependent_vars, 
                                  input_independent_var = "south west" )
 # West Nile region
-top3_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+top3_westnile <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_n = 3, 
                                  input_dependent_vars = top3_dependent_vars, 
                                  input_independent_var = "west nile" )
@@ -339,7 +339,7 @@ top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_dependent_vars = top2_dependent_vars, 
                                  input_independent_var = "south west" )
 # West Nile region
-top2_southwest <- top_n_analysis(input_summary_stats = summary.stats.list,
+top2_westnile <- top_n_analysis(input_summary_stats = summary.stats.list,
                                  input_n = 2, 
                                  input_dependent_vars = top2_dependent_vars, 
                                  input_independent_var = "west nile" )
