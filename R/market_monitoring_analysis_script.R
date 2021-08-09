@@ -538,3 +538,12 @@ data_merge <- bind_cols(top_analysis,
                         rank_dm
 ) %>% 
   mutate(across(where(is.numeric), ~round(., 0)))
+
+# save the file
+write_csv(data_merge,
+          paste0("outputs/",
+                 output_folder,
+                 "/",
+                 butteR::load_audit(), "_",
+                 yrmo_constructed,
+                 "_jmmi_data_merge.csv"), na = "n/a" )
