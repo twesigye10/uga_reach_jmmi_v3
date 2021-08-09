@@ -83,5 +83,5 @@ jmmi_datamerge_filter_rename <- function(input_df, input_yrmo_constructed, input
     filter(yrmo == {{input_yrmo_constructed}}) %>% 
     ungroup() %>% 
     select(-{{input_unselection}}) %>% 
-    rename_with(.cols = everything(), .fn = ~paste0(input_level, .x))
+    rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
 }
