@@ -81,26 +81,26 @@ perct_vars_analysis <- function(input_summary_stats, input_dependent_vars,
 jmmi_datamerge_filter_rename <- function(input_df, input_yrmo_constructed, input_unselection, input_level) {
   
   if(input_level == "national"){
-    input_df %>% 
+    out_df <- input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}}) %>% 
       ungroup() %>% 
       select(-any_of({{input_unselection}})) %>%
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   if(input_level == "southwest"){
-    input_df %>% 
+    out_df <- input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}} & regions == "south west") %>% 
       ungroup() %>% 
       select(-any_of({{input_unselection}})) %>% 
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   if(input_level == "westnile"){
-    input_df %>% 
+    out_df <- input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}} & regions == "west nile") %>% 
       ungroup() %>% 
       select(-any_of({{input_unselection}})) %>%
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   
-  input_df
+  out_df
 }
