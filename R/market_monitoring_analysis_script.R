@@ -217,7 +217,7 @@ openxlsx::write.xlsx(list_of_datasets_med,
                             output_folder,"/",
                             butteR::date_file_prefix(),"_",
                             yrmo_constructed,
-                            "_UGA_JMMI_Means and percentage change.xlsx")
+                            "_UGA_JMMI_Means and percentage change.xlsx"), overwrite = TRUE
 )
 
 list_of_datasets_meb <- list("Settlement MEB" = meb_data$meb_items,
@@ -232,7 +232,7 @@ openxlsx::write.xlsx(list_of_datasets_meb,
                             output_folder,"/",
                             butteR::date_file_prefix(),"_",
                             yrmo_constructed,
-                            "_UGA_JMMI_MEB and percentage change.xlsx")
+                            "_UGA_JMMI_MEB and percentage change.xlsx"), overwrite = TRUE
 )
 
 
