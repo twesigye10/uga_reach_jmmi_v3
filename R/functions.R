@@ -84,21 +84,21 @@ jmmi_datamerge_filter_rename <- function(input_df, input_yrmo_constructed, input
     input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}}) %>% 
       ungroup() %>% 
-      select(-{{input_unselection}}) %>% 
+      select(-any_of({{input_unselection}})) %>%
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   if(input_level == "southwest"){
     input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}} & regions == "south west") %>% 
       ungroup() %>% 
-      select(-{{input_unselection}}) %>% 
+      select(-any_of({{input_unselection}})) %>% 
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   if(input_level == "westnile"){
     input_df %>% 
       filter(yrmo == {{input_yrmo_constructed}} & regions == "west nile") %>% 
       ungroup() %>% 
-      select(-{{input_unselection}}) %>% 
+      select(-any_of({{input_unselection}})) %>%
       rename_with(.cols = everything(), .fn = ~paste0(input_level, "_", .x))
   }
   
