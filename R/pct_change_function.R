@@ -136,7 +136,7 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
   change_national_last_round <- left_join(pct_change_all$national,  meb_pct_change_all_levels$national) %>% 
     select(-ends_with("march"))
   
-  change_national_last_march <- left_join(pct_change_all$national,  meb_pct_change_all_levels$national) %>% 
+  change_national_march <- left_join(pct_change_all$national,  meb_pct_change_all_levels$national) %>% 
     select(-ends_with("last_round"))
   
   percent_change_national <- left_join(change_national_last_round, change_national_last_march)
@@ -160,7 +160,9 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
     percent_change_national = percent_change_national,
     meb_percent_change_settlement = meb_pct_change_all_levels$settlement,
     meb_percent_change_region = meb_pct_change_all_levels$regions,
-    meb_percent_change_national = meb_pct_change_all_levels$national
+    meb_percent_change_national = meb_pct_change_all_levels$national,
+    change_national_march = change_national_march,
+    change_national_last_round = change_national_last_round
   )
   
 }
