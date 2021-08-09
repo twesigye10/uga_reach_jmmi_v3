@@ -516,3 +516,25 @@ rank_dm <- meb_data$rank_settlements %>%
   select(-c(rank, meb_full)) %>% 
   pivot_wider(names_from = new_var, values_from = settlement)
 
+#         bind everything   #
+
+data_merge <- bind_cols(top_analysis,
+                        non_perct_vars_fin,
+                        perct_vars_fin,
+                        national,
+                        regional_sw,
+                        regional_wn,
+                        settlement_dm,
+                        change_national_march,
+                        change_national_last_round,
+                        percent_change_region_sw,
+                        percent_change_region_wn,
+                        percent_change_set,
+                        meb_set,
+                        meb_reg_sw,
+                        meb_reg_wn,
+                        meb_nat,
+                        num_assessed_merge,
+                        rank_dm
+) %>% 
+  mutate(across(where(is.numeric), ~round(., 0)))
