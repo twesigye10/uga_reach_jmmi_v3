@@ -443,10 +443,10 @@ regional_sw <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_
 regional_wn <- jmmi_datamerge_filter_rename(input_df = region_items, input_yrmo_constructed = yrmo_constructed,
                                             input_unselection = item_prices_cols_to_remove, input_level = "westnile")
 # extracting relevant data - settlement
-settlement_dm <- settlement_items %>% 
+settlement_dm <- pct_change_data$settlement_items %>% 
   filter(yrmo == yrmo_constructed) %>% 
   ungroup() %>% 
-  select(-c(collection_order, district, regions, price_nails, yrmo)) %>% 
+  select(-c(collection_order, district, regions, price_nails, yrmo, month)) %>% 
   pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
   mutate(new_var = paste0(settlement, "_", var_name)) %>% 
   select(new_var, var_value) %>% 
@@ -458,7 +458,7 @@ change_national_march <- pct_change_data$change_national_march %>%
   mutate(collection_order_perct_march = NULL) %>% 
   rename_with(.cols = everything(), .fn = ~paste0("national_", .x))
 
-change_national_last_round <- pct_change_data$change_national_march %>% 
+change_national_last_round <- pct_change_data$change_national_last_round %>% 
   mutate(collection_order_perct_last_round = NULL) %>% 
   rename_with(.cols = everything(), .fn = ~paste0("national_", .x))
 
