@@ -19,8 +19,8 @@ prices_for_pct_change_summary <- function(input_df, input_select, input_groups) 
   input_df <- item_prices_for_pct_change %>% 
     select(-{{input_select}}) %>% 
     group_by(across({{input_groups}})) %>%
-    summarise(across(where(is.numeric),~mean(.,na.rm=T)), .groups = "keep") %>% 
-    mutate(across(everything(),~change_nan_and_inf_to_na(.)))
+    summarise(across(everything(), ~mean(., na.rm = TRUE)), .groups = "keep") %>% 
+    mutate(across(everything(), ~change_nan_and_inf_to_na(.)))
 }
 
 # custom function to rename columns in the same way that has been used for previous FS
