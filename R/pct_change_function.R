@@ -139,7 +139,7 @@ percentage_change_calculations <- function(input_df, input_yrmo_to_include,
   change_national_march <- left_join(pct_change_all$national,  meb_pct_change_all_levels$national) %>% 
     select(-ends_with("last_round"))
   
-  percent_change_national <- left_join(change_national_last_round, change_national_last_march)
+  percent_change_national <- left_join(change_national_last_round, change_national_march)
   
   # settlement extract ------------------------------------------------------
   
