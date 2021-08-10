@@ -118,7 +118,7 @@ meb_cal_func <- function(input_item_prices, input_ref_mebs, input_yrmo_construct
     mutate( collection_order = case_when( yrmo == input_yrmo_to_include[length(input_yrmo_to_include)] ~ 4,
                                           yrmo == input_yrmo_to_include[length(input_yrmo_to_include) - 1] ~ 3,
                                           TRUE ~ 1)
-    ) %>% select(month, yrmo, everything())
+    ) %>% select(yrmo, month, everything())
   
   # regional
   meb_items_regional <- meb_items %>% 
