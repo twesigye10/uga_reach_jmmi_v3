@@ -97,9 +97,8 @@ df<-df_all_data %>%
   ) %>% 
   filter(!is.na(month_lab)) %>% 
   # reorganise columns and remove other columns
-  select(-c("day", "DName2019", "sub_regions"),
-         c("month","country", "district", "regions", "settlement", "market_final"), 
-         everything()
+  select(c("month","country", "district", "regions", "settlement", "market_final"), 
+         !any_of(c("day", "DName2019", "sub_regions"))
   )
 # WFP/REACH decided to remove 'Less' from vendors_change data as it should not have been an option 
 if("202011" %in% yrmo_to_include){
