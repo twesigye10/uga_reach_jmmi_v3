@@ -519,7 +519,7 @@ rank_dm <- meb_data$rank_settlements %>%
 
 #         bind everything   #
 
-data_merge <- bind_cols(top_analysis,
+data_merge <- cbind(top_analysis,
                         non_perct_vars_fin,
                         perct_vars_fin,
                         national,
@@ -537,8 +537,10 @@ data_merge <- bind_cols(top_analysis,
                         meb_nat,
                         num_assessed_merge,
                         rank_dm
-) %>% 
-  mutate(across(where(is.numeric), ~round(., 0)))
+) 
+
+cols <- sapply(data_merge, is.numeric)
+data_merge[, cols] <- round(data_merge[, cols], 0)
 
 # save the file
 write_csv(x = data_merge,
