@@ -425,7 +425,7 @@ perct_vars_fin <- bind_cols(perct_vars, perct_vars_southwest, perct_vars_westnil
 
 # number of things assessed
 num_assessed_merge <- data_merge_summary %>% 
-  pivot_longer(cols = starts_with("num_"), names_to = "num_market_assessed", values_to = "num_assessed") %>% 
+  gather(key = "num_market_assessed", value = "num_assessed", -level) %>% 
   mutate(new_var = paste0(num_market_assessed, "_", level)) %>% 
   ungroup() %>% 
   select(new_var, num_assessed) %>% 
@@ -447,7 +447,7 @@ settlement_dm <- pct_change_data$settlement_items %>%
   filter(yrmo == yrmo_constructed) %>% 
   ungroup() %>% 
   select(-c(collection_order, district, regions, price_nails, yrmo, month)) %>% 
-  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  gather(key = "var_name", value = "var_value", -settlement) %>% 
   mutate(new_var = paste0(settlement, "_", var_name)) %>% 
   select(new_var, var_value) %>% 
   pivot_wider(names_from = new_var, values_from = var_value)
@@ -481,7 +481,7 @@ percent_change_region_wn <- pct_change_data$percent_change_region %>%
 percent_change_set <- pct_change_data$percent_change_settlement %>% 
   select(-contains("collection_")) %>% 
   ungroup() %>% 
-  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  gather(key = "var_name", value = "var_value", -settlement) %>% 
   mutate(new_var = paste0(settlement, "_", var_name)) %>% 
   select(new_var, var_value) %>% 
   pivot_wider(names_from = new_var, values_from = var_value)
@@ -493,7 +493,7 @@ meb_set <- meb_data$meb_items %>%
   filter(yrmo == yrmo_constructed) %>% 
   ungroup() %>% 
   select(-c(collection_order, month, regions, district, yrmo)) %>% 
-  pivot_longer(cols = -settlement, names_to = "var_name", values_to = "var_value") %>% 
+  gather(key = "var_name", value = "var_value", -settlement) %>% 
   mutate(new_var = paste0(settlement, "_", var_name)) %>% 
   select(new_var, var_value) %>% 
   pivot_wider(names_from = new_var, values_from = var_value)
