@@ -96,6 +96,7 @@ df<-df_all_data %>%
          market_other = NULL
   ) %>% 
   filter(!is.na(month_lab)) %>% 
+  mutate(country = "uganda") %>% 
   # reorganise columns and remove other columns
   select(c("month","country", "district", "regions", "settlement", "market_final"), 
          !any_of(c("day", "DName2019", "sub_regions"))
