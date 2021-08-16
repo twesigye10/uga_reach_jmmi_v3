@@ -183,7 +183,7 @@ data_merge_summary <- bind_rows(markets_nationwide, markets_per_region)
 
 
 # load reference meb data
-ref_mebs <- read_excel("./inputs/wfp_march_mebs.xlsx") %>% 
+ref_mebs <- read_excel("./inputs/wfp_march_mebs_2021.xlsx") %>% 
   mutate(yrmo = as.numeric(yrmo_to_include[1]))
 
 # calculating MEBs
