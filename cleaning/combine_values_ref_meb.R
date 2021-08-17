@@ -36,3 +36,12 @@ combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>%
   mutate(across(where(is.numeric), .fns = ~round(., 0)))
 
 openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/combined_meb_components.xlsx")
+
+# Item prices -------------------------------------------------------------
+item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_17_08_2021_updated.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
+  mutate(across(any_of(c("settlement",  "district", "regions")), .fns = str_to_lower ),
+         year = as.numeric(str_replace(string = year, pattern = "Ref ", replacement =  "")),
+         month = 3) %>% 
+  mutate(across(where(is.numeric), .fns = ~round(., 0)))
+
+write_csv(x = item_prices_reference, file = "outputs/202103_market_monitoring_cleaned.csv")
