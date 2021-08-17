@@ -75,7 +75,7 @@ meb_cal_func <- function(input_item_prices, input_ref_mebs, input_yrmo_construct
       meb_beans = price_beans * 5.4 * 5,
       meb_sorghum = price_sorghum * 1.5 * 5,
       meb_oil = price_oil * 0.75 * 5,
-      meb_salt = price_salt * 0.15 * 5,
+      meb_salt = price_salt * 2 * 0.15 * 5, # price of salt is per 500g, meaning(price_salt * 2 )
       meb_milk = price_milk * 0.3 * 5,
       meb_dodo = price_dodo * 3 * 5,
       meb_fish = price_fish * 0.6 * 5,
