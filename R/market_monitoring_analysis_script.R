@@ -58,7 +58,7 @@ df_all_data <- fps$fullpath %>%
              print(.x)
              x <- read_csv(.x) %>% 
                mutate(
-                 settlement = str_replace(settlement, "rhino", "rhino camp"),
+                 settlement = ifelse(settlement == "rhino", "rhino camp", settlement),
                  yrmo = as.numeric(.y),
                  yr = as.numeric(str_sub(string = yrmo, start = 1, end = 4)),
                  mo = as.numeric(str_sub(string = yrmo, start = 5, end = 6))
