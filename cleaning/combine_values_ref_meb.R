@@ -1,7 +1,9 @@
 # combining MEB values for the 2021 reference -----------------------------------
 
-meb_ref_item_references <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_updated.xlsx", sheet = "Item references", range = "A1:AP14")
-meb_ref_quantities <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_updated.xlsx", sheet = "Item source price table", range = "B119:C130") %>% 
+meb_ref_item_references <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", 
+                                              sheet = "Item references", range = "A1:AU14")
+meb_ref_quantities <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", 
+                                         sheet = "Item source price table", range = "B119:C130") %>% 
   janitor::clean_names() %>% 
   mutate(across(!where(is.numeric), .fns = ~paste0("q_", .x)))
 
@@ -35,13 +37,18 @@ combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>%
   mutate(across(any_of(c("settlement",  "district", "regions")), .fns = str_to_lower )) %>% 
   mutate(across(where(is.numeric), .fns = ~round(., 0)))
 
-openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/combined_meb_components.xlsx")
+openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/combined_meb_components.xlsx", overwrite = TRUE)
 
 # Item prices -------------------------------------------------------------
-item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_17_08_2021_updated.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
+item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
   mutate(across(any_of(c("settlement",  "district", "regions")), .fns = str_to_lower ),
          year = as.numeric(str_replace(string = year, pattern = "Ref ", replacement =  "")),
          month = 3) %>% 
+  relocate(weight_cassava, .after = price_cassava) %>% 
+  relocate(weight_dodo, .after = price_dodo) %>% 
+  relocate(weight_fish, .after = price_fish) %>% 
+  relocate(weight_firewood, .after = price_firewood) %>% 
+  relocate(weight_charcoal, .after = price_charcoal) %>% 
   mutate(across(where(is.numeric), .fns = ~round(., 0)))
 
 write_csv(x = item_prices_reference, file = "outputs/202103_market_monitoring_cleaned.csv")
