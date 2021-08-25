@@ -37,7 +37,7 @@ combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>%
   mutate(across(any_of(c("settlement",  "district", "regions")), .fns = str_to_lower )) %>% 
   mutate(across(where(is.numeric), .fns = ~round(., 0)))
 
-openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/combined_meb_components.xlsx", overwrite = TRUE)
+openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/wfp_march_mebs_2021.xlsx", overwrite = TRUE)
 
 # Item prices -------------------------------------------------------------
 item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
