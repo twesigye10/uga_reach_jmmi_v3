@@ -14,7 +14,6 @@ library(lubridate)
 library(butteR)
 
 # source scripts
-source("./R/location_list.R")
 source("./R/meb_calc.R")
 source("./R/functions.R")
 source("./R/extra_r11_cleaning.R")
