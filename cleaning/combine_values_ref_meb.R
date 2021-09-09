@@ -1,3 +1,5 @@
+library(tidyverse)
+
 # combining MEB values for the 2021 reference -----------------------------------
 
 meb_ref_item_references <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", 
@@ -35,9 +37,11 @@ combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>%
            meb_maize_f, meb_beans, meb_sorghum, meb_oil, meb_salt, meb_milk, meb_dodo,
            meb_fish, meb_cassava, meb_soap, meb_firewood),everything()) %>% 
   mutate(across(any_of(c("settlement",  "district", "regions")), .fns = str_to_lower )) %>% 
-  mutate(across(where(is.numeric), .fns = ~round(., 0)))
+  mutate(meb_full_new = sum(meb_food, meb_clothing, meb_water, meb_livelihoods, meb_education, meb_transport,
+                          meb_health, meb_communication, meb_hygiene, meb_other_hdd, meb_energy, na.rm = TRUE),
+         across(where(is.numeric), .fns = ~round(., 0)))
 
-openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/wfp_march_mebs_2021.xlsx", overwrite = TRUE)
+openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/wfp_march_mebs_2021_new.xlsx", overwrite = TRUE)
 
 # Item prices -------------------------------------------------------------
 item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
