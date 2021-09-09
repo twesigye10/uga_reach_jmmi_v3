@@ -29,7 +29,7 @@ meb_ref_price_items <- meb_ref_item_references %>%
   select(starts_with("meb"))
 
 # meb components
-meb_components <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_components_source.xlsx", sheet = "Reference 2021", range = "A1:Q14")
+meb_components <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_components_source.xlsx", sheet = "Reference 2021", range = "A1:P14")
 
 # combine the two data frames
 combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>% 
@@ -43,7 +43,7 @@ combined_meb_components <- bind_cols(meb_components, meb_ref_price_items) %>%
   ungroup() %>% 
   mutate(across(where(is.numeric), .fns = ~round(., 0)))
 
-openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/wfp_march_mebs_2021_new.xlsx", overwrite = TRUE)
+openxlsx::write.xlsx(x = combined_meb_components, file = "outputs/wfp_march_mebs_2021.xlsx", overwrite = TRUE)
 
 # Item prices -------------------------------------------------------------
 item_prices_reference <- readxl::read_excel(path = "support_docs/Reference_2021_MEB_Items_source_18_08_2021.xlsx", sheet = "Item references", range = "A1:AU14") %>% 
